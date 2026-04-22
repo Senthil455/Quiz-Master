@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ quiz[0] }}</h1>
+        <p>{{ quiz[1] }}</p>
+
+        <form method="POST" action="{{ url_for('take_quiz', attempt_id=attempt_id) }}">
+            {% for question in questions %}
+                <div class="question-block">
+                    <h3>Question {{ loop.index }}</h3>
+                    <p>{{ question[1] }}</p>
+
+                    <div class="options">
+                        <label>
+                            <input type="radio" name="question_{{ question[0] }}" value="A" required>
+                            A. {{ question[2] }}
+                        </label><br>
+                        <label>
+                            <input type="radio" name="question_{{ question[0] }}" value="B" required>
+                            B. {{ question[3] }}
+                        </label><br>
+                        <label>
+                            <input type="radio" name="question_{{ question[0] }}" value="C" required>
+                            C. {{ question[4] }}
+                        </label><br>
+                        <label>
+                            <input type="radio" name="question_{{ question[0] }}" value="D" required>
+                            D. {{ question[5] }}
+                        </label>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-lg">Submit Quiz</button>
+        </form>
+    </div>
+</body>
+</html>

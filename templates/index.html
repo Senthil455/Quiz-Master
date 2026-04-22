@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>QuizMaster - Modern Quiz Platform for Colleges</title>
+    <meta name="description" content="Transform your college assessments with QuizMaster. Create, manage, and take quizzes with our intuitive platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar animate-slide-down">
+        <div class="container nav-content">
+            <a href="{{ url_for('index') }}" class="brand">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span class="brand-name">QuizMaster</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('login') }}" class="btn btn-ghost">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero animate-fade-in">
+            <div class="container hero-content">
+                <h1 class="hero-title">Transform Your College Assessments</h1>
+                <p class="hero-subtitle">Modern, intuitive quiz platform designed for teachers and students</p>
+                <div class="hero-actions">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started Free</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg">Sign In</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="roles-section">
+            <div class="container">
+                <h2 class="section-title">Choose Your Role</h2>
+                <div class="roles-grid">
+                    <a href="{{ url_for('teacher_dashboard') }}" class="role-card animate-fade-in" style="animation-delay: 0.1s">
+                        <div class="role-icon gradient-primary">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3 class="role-title">Teacher</h3>
+                        <p class="role-desc">Create and manage quizzes, track student performance, and analyze results.</p>
+                        <span class="role-cta">Access Dashboard →</span>
+                    </a>
+                    <a href="{{ url_for('student_dashboard') }}" class="role-card animate-fade-in" style="animation-delay: 0.2s">
+                        <div class="role-icon gradient-accent">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="role-title">Student</h3>
+                        <p class="role-desc">Take quizzes, view scores, track your progress and improve your knowledge.</p>
+                        <span class="role-cta">Take Quiz →</span>
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="role-card animate-fade-in" style="animation-delay: 0.3s">
+                        <div class="role-icon gradient-success">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M3 9h18"/>
+                                <path d="M9 21V9"/>
+                            </svg>
+                        </div>
+                        <h3 class="role-title">Admin</h3>
+                        <p class="role-desc">Manage users, oversee platform operations, and generate reports.</p>
+                        <span class="role-cta">Admin Panel →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">Why Choose QuizMaster?</h2>
+                <div class="features-grid">
+                    <div class="feature-item animate-fade-in">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Fast & Intuitive</h3>
+                        <p>Clean interface that anyone can use without training</p>
+                    </div>
+                    <div class="feature-item animate-fade-in">
+                        <div class="feature-icon">📊</div>
+                        <h3>Analytics</h3>
+                        <p>Track performance and identify areas for improvement</p>
+                    </div>
+                    <div class="feature-item animate-fade-in">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Friendly</h3>
+                        <p>Take quizzes anywhere, on any device</p>
+                    </div>
+                    <div class="feature-item animate-fade-in">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Secure</h3>
+                        <p>Your data is protected with enterprise-grade security</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 QuizMaster. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+

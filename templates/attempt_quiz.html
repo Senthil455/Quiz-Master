@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attempt Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-info-card">
+            <h1>{{ quiz[2] }}</h1>
+            <p class="quiz-description">{{ quiz[3] }}</p>
+
+            <div class="quiz-metadata">
+                <div class="metadata-item">
+                    <strong>Class:</strong> {{ quiz[9] }}
+                </div>
+                <div class="metadata-item">
+                    <strong>Difficulty:</strong> {{ quiz[4] }}
+                </div>
+                <div class="metadata-item">
+                    <strong>Available From:</strong> {{ quiz[5] }}
+                </div>
+                <div class="metadata-item">
+                    <strong>Available To:</strong> {{ quiz[6] }}
+                </div>
+                <div class="metadata-item">
+                    <strong>Attempt Limit:</strong> {{ quiz[7] }}
+                </div>
+                <div class="metadata-item">
+                    <strong>Your Attempts:</strong> {{ attempt_count }} / {{ quiz[7] }}
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            {% if attempt_count >= quiz[7] %}
+                <div class="alert alert-warning">
+                    <strong>Attempt Limit Reached:</strong> You have used all {{ quiz[7] }} attempts for this quiz.
+                </div>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            {% else %}
+                <div class="quiz-actions">
+                    <a href="{{ url_for('start_quiz', quiz_id=quiz_id) }}" class="btn btn-success btn-lg">
+                        Start Quiz Attempt {{ attempt_count + 1 }}
+                    </a>
+                    <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Login - QuizMaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar animate-slide-down">
+        <div class="container nav-content">
+            <a href="{{ url_for('index') }}" class="brand">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span class="brand-name">QuizMaster</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="form-wrapper">
+            <h1>Log In to QuizMaster</h1>
+            <form method="POST" class="form-card">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <ul class="flash-list">
+                      {% for category, message in messages %}
+                        <li class="flash-{{ category }}">{{ message }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" name="email" id="email" required autocomplete="email" value="{{ form_data.email if form_data else '' }}"/>
+
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required autocomplete="current-password"/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Login</button>
+                <div class="form-footer">
+                    Don't have an account?
+                    <a href="{{ url_for('register') }}">Register</a>
+                </div>
+                
+                <div style="margin-bottom: 30px; display: flex; justify-content: center; width:100%">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        &larr; Back to Home
+    </a>
+</div>
+
+
+            </form>
+        </div>
+    </main>
+</body>
+</html>
+

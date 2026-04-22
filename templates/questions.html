@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+body {
+    background: #f3f8fa;
+    font-family: 'Inter', Arial, sans-serif;
+    color: #23272f;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 670px;
+    margin: 48px auto 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(44, 62, 80, 0.11);
+    padding: 38px 34px 36px 34px;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-size: 1.85rem;
+    color: #4b1fe6;
+    font-weight: 800;
+    letter-spacing: 0px;
+}
+
+h2, h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.22rem;
+}
+
+.alert {
+    padding: 14px 18px;
+    margin-bottom: 23px;
+    border-radius: 13px;
+    font-weight: 570;
+    font-size: 1.04rem;
+}
+
+.alert-success {
+    background-color: #eafaf1;
+    color: #15803d;
+    border: 1px solid #51e39c;
+}
+
+.alert-warning {
+    background-color: #fff8e1;
+    color: #eab308;
+    border: 1px solid #ffe066;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-weight: 600;
+    color: #29303a;
+}
+
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 7px;
+    border: 1.5px solid #e5e7eb;
+    background: #f6f7fb;
+    font-size: 1.03rem;
+    margin-bottom: 2px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.btn {
+    padding: 0.65rem 1.6rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(136,64,255,0.05);
+    transition: background 0.15s, box-shadow 0.13s;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    margin-top: 2px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg,#6236ff,#7c5aff 82%);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #7c5aff 60%, #6236ff 100%);
+    color: #fff;
+}
+
+.btn-danger, .btn-danger.btn-sm {
+    background-color: #ef4444;
+    color: #fff;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.98rem;
+    margin-left: 2px;
+}
+
+.btn-danger:hover, .btn-danger.btn-sm:hover {
+    background-color: #d32f2f;
+}
+
+.btn-success {
+    background-color: #20c997;
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #e1e4ea;
+    color: #3f3e44;
+}
+
+.question-card {
+    background: #f9fafb;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+    padding: 1.1rem 1.7rem 1rem 1.2rem;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 18px 0 rgba(44, 80, 130, 0.06);
+}
+
+ul {
+    margin-bottom: 0.7rem;
+    padding-left: 15px;
+}
+
+hr {
+    border: none;
+    border-top: 1.6px solid #ececec;
+    margin: 16px 0;
+}
+
+@media (max-width: 700px) {
+    .container { padding: 11px 4vw; }
+    h1 { font-size: 1.25rem; }
+}
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Questions for Quiz</h1>
+        <h2>{{ quiz[2] }}</h2>
+        <p>{{ quiz[3] }}</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Publish/Draft Status -->
+        {% if quiz[8] %}  <!-- quiz[8] is isdraft -->
+            <div class="alert alert-warning">
+                <strong>Draft Mode:</strong> This quiz is not visible to students yet.
+                <a href="{{ url_for('publish_quiz', quiz_id=quiz_id) }}" class="btn btn-success" onclick="return confirm('Publish this quiz? Students will be able to see and attempt it.')">
+                    Publish Quiz (Make Live)
+                </a>
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                <strong>Published:</strong> This quiz is live and visible to students.
+            </div>
+        {% endif %}
+        {% if not quiz_ended %}
+        <h3>Add New Question</h3>
+        <form method="POST" action="{{ url_for('manage_questions', quiz_id=quiz_id) }}">
+            <div class="form-group">
+                <label for="question_text">Question Text *</label>
+                <textarea id="question_text" name="question_text" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="option_a">Option A *</label>
+                <input type="text" id="option_a" name="option_a" required>
+            </div>
+
+            <div class="form-group">
+                <label for="option_b">Option B *</label>
+                <input type="text" id="option_b" name="option_b" required>
+            </div>
+
+            <div class="form-group">
+                <label for="option_c">Option C *</label>
+                <input type="text" id="option_c" name="option_c" required>
+            </div>
+
+            <div class="form-group">
+                <label for="option_d">Option D *</label>
+                <input type="text" id="option_d" name="option_d" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correct_option">Correct Option *</label>
+                <select id="correct_option" name="correct_option" required>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty">Difficulty</label>
+                <select id="difficulty" name="difficulty">
+                    <option value="Easy">Easy</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Question</button>
+        </form>
+        {% else %}
+         <div class="alert alert-warning" style="margin-bottom: 32px;">
+        <strong>Quiz Ended:</strong>
+        You cannot add new questions because the quiz end date has passed.
+    </div>
+{% endif %}
+
+        <h3>Existing Questions</h3>
+        {% if questions %}
+            {% for question in questions %}
+                <div class="question-card">
+                    <p><strong>Q{{ loop.index }}:</strong> {{ question[2] }}</p>
+                    <ul>
+                        <li>A: {{ question[3] }}</li>
+                        <li>B: {{ question[4] }}</li>
+                        <li>C: {{ question[5] }}</li>
+                        <li>D: {{ question[6] }}</li>
+                    </ul>
+                    <p><strong>Correct Answer:</strong> {{ question[7] }} | <strong>Difficulty:</strong> {{ question[8] }}</p>
+                    <a href="{{ url_for('delete_question', question_id=question[0]) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this question?')">Delete</a>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No questions added yet. Click "Add Question" to create your first question.</p>
+        {% endif %}
+
+        <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Attempt Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* ====== GLOBAL ====== */
+    body {
+      background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+      font-family: "Poppins", sans-serif;
+      color: #1e293b;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    h2 {
+      color: #312e81;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    /* ====== LAYOUT ====== */
+    .center-main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+      padding: 1rem;
+    }
+
+    .outer-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 35px rgba(99, 102, 241, 0.12);
+      border-radius: 2rem;
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      width: 95%;
+      max-width: 950px;
+      text-align: center;
+      transition: transform 0.25s ease;
+    }
+
+    .outer-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .h2-emoji {
+      font-size: 2em;
+      vertical-align: middle;
+      margin-right: 0.18em;
+    }
+
+    /* ====== META INFO ====== */
+    .details-meta {
+      margin-bottom: 2rem;
+      font-size: 1.05em;
+      line-height: 1.9em;
+    }
+
+    .details-meta span {
+      display: inline-block;
+      min-width: 115px;
+      font-weight: 600;
+      color: #4f46e5;
+    }
+
+    /* ====== TABLE ====== */
+    .table-container {
+      margin: 1.5rem auto;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 3px 16px rgba(99, 102, 241, 0.08);
+    }
+
+    thead th {
+      background: linear-gradient(90deg, #eef2ff, #e0e7ff);
+      color: #3730a3;
+      padding: 1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 1em;
+      letter-spacing: 0.3px;
+    }
+
+    tbody td {
+      padding: 1.1em 0.9em;
+      border-bottom: 1px solid #f3f4f6;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+      transition: background 0.2s;
+    }
+
+    /* ====== STATUS & BADGES ====== */
+    .badge {
+      border-radius: 1em;
+      padding: 0.3em 1em;
+      font-weight: 600;
+      font-size: 0.95em;
+      display: inline-block;
+    }
+
+    .badge-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .answer-correct {
+      color: #059669;
+      background: #d1fae5;
+      font-weight: 600;
+      border-radius: 0.8em;
+      padding: 0.25em 0.8em;
+      display: inline-block;
+    }
+
+    .answer-incorrect {
+      color: #dc2626;
+      background: #fee2e2;
+      font-weight: 600;
+      border-radius: 0.8em;
+      padding: 0.25em 0.8em;
+      display: inline-block;
+    }
+
+    /* ====== BUTTON ====== */
+    .back-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: #fff;
+      border: none;
+      padding: 0.8em 2.6em;
+      border-radius: 1.5em;
+      font-weight: 700;
+      font-size: 1.05em;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.18);
+      margin-top: 1.8rem;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="center-main">
+    <div class="outer-card">
+      <h2 class="h2-emoji">📝 Quiz Attempt Details</h2>
+
+      <div class="details-meta">
+        <span>Quiz:</span> {{ attempt[1] }}<br>
+        <span>Score:</span> {{ "%.2f"|format(attempt[2]) }}%<br>
+        <span>Started:</span> {{ attempt[3] }}<br>
+        <span>Ended:</span> {{ attempt[4] or "In progress" }}<br>
+        <span>Duration:</span>
+        {% if attempt[4] %}
+          {{ (attempt[4] - attempt[3]).total_seconds() // 60 }} mins
+        {% else %} -- {% endif %}
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Your Answer</th>
+              <th>Correct Answer</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in responses %}
+            <tr>
+              <td>{{ r[1] }}</td>
+              <td>
+                {% if r[3] %}
+                  <span class="answer-correct">{{ r[2] }}</span>
+                {% else %}
+                  <span class="answer-incorrect">{{ r[2] }}</span>
+                {% endif %}
+              </td>
+              <td>{{ r[4] }}</td>
+              <td>
+                {% if r[3] %}
+                  <span class="badge badge-success">Correct</span>
+                {% else %}
+                  <span class="badge badge-danger">Incorrect</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <a href="{{ url_for('list_responses') }}" class="back-btn">
+          ← Back to Attempts
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

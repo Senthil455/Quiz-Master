@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    let fromDate = new Date(document.getElementById('available_from').value);
+    let toDate = new Date(document.getElementById('available_to').value);
+    if (toDate < fromDate) {
+        alert("Available To date must be after Available From date.");
+        e.preventDefault();
+    }
+});
+</script>
+
+    <style>
+      body {
+        background: #F6F7FB;
+      }
+      .container {
+        max-width: 500px;
+        margin: 40px auto 0 auto;
+        background: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 32px 0 rgba(80,40,200,.09);
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+      }
+      h1 {
+        color: #9219c6;
+        font-size: 2.2rem;
+        margin-bottom: 1.7rem;
+        font-weight: 800;
+        text-align: center;
+        letter-spacing: -1px;
+      }
+      .form-group {
+        margin-bottom: 1.1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      label {
+        font-weight: 500;
+        margin-bottom: 0.35rem;
+        color: #44497a;
+      }
+      input[type="text"],
+      input[type="number"],
+      input[type="datetime-local"],
+      select,
+      textarea {
+        border: 1.5px solid #d1d5d9;
+        border-radius: 0.6rem;
+        padding: 0.6rem;
+        font-size: 1rem;
+        width: 100%;
+        transition: border 0.2s;
+        background: #f5f3fa;
+        color: #393043;
+        outline: none;
+      }
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      input[type="datetime-local"]:focus,
+      select:focus,
+      textarea:focus {
+        border: 2px solid #9219c6;
+        background: #fff;
+      }
+      .btn-primary {
+        background: linear-gradient(90deg,#a020f0 0,#ff43b0 100%);
+        color: #fff;
+        border: none;
+        border-radius: 0.8rem;
+        font-weight: 700;
+        font-size: 1.08rem;
+        padding: 0.80rem 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 2px 16px 0 #d1a3ff30;
+        margin-top: 10px;
+        transition: background .16s;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(90deg,#ff43b0 0,#a020f0 100%);
+      }
+      .btn-secondary {
+        margin-left: 1.2rem;
+        background: #eee;
+        border: none;
+        color: #ac21e7;
+        border-radius: 0.8rem;
+        font-size: 1.08rem;
+        font-weight: 600;
+        padding: 0.80rem 1.4rem;
+        cursor: pointer;
+        transition: background .16s;
+        box-shadow: 0 1px 10px 0 #e8e3ec22;
+      }
+      .btn-secondary:hover {
+        background: #f3effb;
+        color: #9219c6;
+      }
+      .alert {
+        padding: 0.65rem 1.3rem;
+        border-radius: 0.7rem;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      .alert-success { background: #e7f9f1; color: #2c6a51; }
+      .alert-warning { background: #fff8ea; color: #9f6a00; }
+      .alert-error { background: #ffeaea; color: #bb1621; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create New Quiz</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('create_quiz') }}">
+            <div class="form-group">
+                <label for="title">Quiz Title *</label>
+                <input type="text" id="title" name="title" required placeholder="e.g., Python Basics Quiz" value="{{ form_data.title if form_data is defined else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Brief description of the quiz">{{ form_data.description if form_data is defined else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="class">Select Class *</label>
+                <select id="class" name="class" required>
+                  <option value="">-- Choose a Class --</option>
+                  {% for cls, subject in teacher_classes %}
+                      <option value="{{ cls }}" {% if form_data is defined and form_data.class_name == cls %}selected{% endif %}>
+                          {{ cls }} {% if subject %}- {{ subject }}{% endif %}
+                      </option>
+                  {% endfor %}
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty">Difficulty Level</label>
+                <select id="difficulty" name="difficulty">
+                  <option value="Easy" {% if form_data is defined and form_data.difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+                  <option value="Medium" {% if form_data is defined and form_data.difficulty == 'Medium' %}selected{% endif %}>Medium</option>
+                  <option value="Hard" {% if form_data is defined and form_data.difficulty == 'Hard' %}selected{% endif %}>Hard</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label for="available_from">Available From *</label>
+                <input type="datetime-local" id="available_from" name="available_from" required value="{{ form_data.available_from if form_data is defined else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="available_to">Available To *</label>
+                <input type="datetime-local" id="available_to" name="available_to" required value="{{ form_data.available_to if form_data is defined else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="attempt_limit">Attempt Limit</label>
+                <input type="number" id="attempt_limit" name="attempt_limit" min="1" value="{{ form_data.attempt_limit if form_data is defined else '3' }}" placeholder="3">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="is_draft" name="is_draft" {% if form_data is defined and form_data.is_draft %}checked{% endif %}>
+                    Save as Draft (not visible to students)
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Quiz & Add Questions</button>
+            <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Register - QuizMaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar animate-slide-down">
+        <div class="container nav-content">
+            <a href="{{ url_for('index') }}" class="brand">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span class="brand-name">QuizMaster</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('login') }}" class="btn btn-ghost">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="form-wrapper">
+            <h1>Register for QuizMaster</h1>
+            <form method="POST" class="form-card" action="/register">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <ul class="flash-list">
+                      {% for category, message in messages %}
+                        <li class="flash-{{ category }}">{{ message }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" name="name" id="name" required autocomplete="name" value="{{ form_data.name if form_data else '' }}"/>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" name="email" id="email" required autocomplete="email" value="{{ form_data.email if form_data else '' }}"/>
+                    <div id="email-error" class="error-message"></div>
+                </div>
+                
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required autocomplete="new-password"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select name="role" id="role" required>
+    <option value="" disabled {% if not form_data or not form_data.role %}selected{% endif %}>Select your role</option>
+    <option value="student" {% if form_data and form_data.role == 'student' %}selected{% endif %}>Student</option>
+    <option value="teacher" {% if form_data and form_data.role == 'teacher' %}selected{% endif %}>Teacher</option>
+</select>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="class">Class/Section</label>
+                    <input type="text" name="class" id="class" required placeholder="e.g. CS201 or Physics-B" value="{{ form_data['class'] if form_data else '' }}"/>
+
+                </div>
+
+                <!-- Teacher approval message -->
+                <div id="teacher-approval-msg" class="form-desc" style="display: none;">
+                    Teachers must await approval by the admin before logging in.
+                </div>
+
+                <!-- Teacher registration key -->
+                <div class="form-group" id="teacher-key-div" style="display: none;">
+                    <label for="teacher_key">Teacher Registration Key</label>
+                    <input type="text" name="teacher_key" id="teacher_key" placeholder="Enter key provided by admin" value="{{ form_data.teacher_key if form_data else '' }}"/>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Register</button>
+
+                <div class="form-footer">
+                    Already have an account?
+                    <a href="{{ url_for('login') }}">Log in</a>
+                </div>
+                <div style="margin-bottom: 15px; display: flex; justify-content: center; width:100%">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        &larr; Back to Home
+    </a>
+</div>
+
+
+            </form>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('role');
+        const approvalMsg = document.getElementById('teacher-approval-msg');
+        const teacherKeyDiv = document.getElementById('teacher-key-div');
+
+        function toggleRoleDependentFields() {
+            const isTeacher = roleSelect.value === "teacher";
+            approvalMsg.style.display = isTeacher ? "block" : "none";
+            teacherKeyDiv.style.display = isTeacher ? "block" : "none";
+        }
+
+        roleSelect.addEventListener('change', toggleRoleDependentFields);
+        toggleRoleDependentFields(); // Trigger once on page load
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const roleSelect = document.getElementById('role');
+    const emailInput = document.querySelector('input[name="email"]');
+
+    form.addEventListener('submit', function (e) {
+    const role = roleSelect.value;
+    const email = emailInput.value.trim();
+    const emailErrorDiv = document.getElementById('email-error');
+    emailErrorDiv.textContent = '';  // Clear previous errors
+
+    if (role === 'student' && !email.endsWith('@student.annauniv.edu')) {
+        e.preventDefault();
+        emailErrorDiv.textContent = 'Student email must end with @student.annauniv.edu';
+        emailInput.focus();
+    } else if (role === 'teacher' && !email.endsWith('@faculty.annauniv.edu')) {
+        e.preventDefault();
+        emailErrorDiv.textContent = 'Teacher email must end with @faculty.annauniv.edu';
+        emailInput.focus();
+    }
+});
+
+});
+    </script>
+</body>
+</html>
+

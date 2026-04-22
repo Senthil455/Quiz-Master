@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Attempts</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+    .center-main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+      padding: 1rem;
+    }
+    .outer-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 35px rgba(99, 102, 241, 0.15);
+      border-radius: 1.8rem;
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      width: 95%;
+      max-width: 950px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+    .outer-card:hover {
+      transform: translateY(-3px);
+    }
+    .drawer-quiz {
+      margin-bottom: 1.7em;
+      overflow: hidden;
+    }
+    details[open] summary {
+      color: #ec4899;
+    }
+    summary {
+      cursor: pointer;
+      outline: none;
+      padding: 1em 0;
+      font-size: 1.18em;
+      font-weight: 800;
+      color: #9333ea;
+      transition: color 0.15s;
+      background: none;
+      border: none;
+      user-select: none;
+      letter-spacing: 0.5px;
+    }
+    summary:hover {
+      color: #ec4899;
+    }
+    details {
+      background: rgba(243, 244, 252, 0.87);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #e9e5fa;
+      margin: 1.2em 0 2em 0;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+    /* Drawer-style animation with longer duration */
+    details .table-container {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 1.2s ease, opacity 1s ease;
+    }
+    details[open] .table-container {
+      max-height: 1000px;
+      opacity: 1;
+      transition: max-height 1.2s ease, opacity 1s ease;
+    }
+    .table-container {
+      margin: 1.5rem auto 1rem auto;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 1.2rem;
+      background: #fff;
+      box-shadow: 0 3px 14px rgba(139, 92, 246, 0.06);
+      font-size: 1em;
+    }
+    thead th {
+      background: linear-gradient(90deg, #eef2ff, #e0e7ff);
+      color: #3730a3;
+      padding: 1em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+    tbody td {
+      padding: 1em;
+      border-bottom: 1px solid #f3f4f6;
+      color: #1f2937;
+      font-weight: 500;
+    }
+    tbody tr:hover {
+      background: #f9fafb;
+      transition: background 0.2s;
+    }
+    .btn-view {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.6rem;
+      border-radius: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 5px 12px rgba(139, 92, 246, 0.15);
+    }
+    .btn-view:hover {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      transform: translateY(-2px);
+    }
+    .back-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: #fff;
+      border: none;
+      padding: 0.8em 2.4em;
+      border-radius: 1.6em;
+      font-weight: 700;
+      font-size: 1.05em;
+      box-shadow: 0 3px 10px rgba(99, 102, 241, 0.18);
+      margin-top: 1.5rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .back-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+    }
+    .badge {
+      border-radius: 1.1em;
+      padding: 0.3em 0.9em;
+      font-weight: 600;
+      font-size: 0.9em;
+      display: inline-block;
+    }
+    .badge-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge-warning {
+      background: #fef9c3;
+      color: #92400e;
+    }
+    .badge-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .empty-state {
+      text-align: center;
+      color: #6b7280;
+      font-size: 1.1em;
+    }
+    .h2-emoji {
+      font-size: 2em;
+      vertical-align: middle;
+      margin-right: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-main">
+    <div class="outer-card">
+      <h2 class="h2-emoji">📊 Quiz Attempts</h2>
+      {% if role == 'teacher' %}
+        {% set quiz_groups = {} %}
+        {% for attempt in attempts %}
+          {% set quiz_title = attempt[1] %}
+          {% if quiz_title not in quiz_groups %}
+            {% set _ = quiz_groups.update({quiz_title: []}) %}
+          {% endif %}
+          {% set _ = quiz_groups[quiz_title].append(attempt) %}
+        {% endfor %}
+        {% for quiz_title, student_attempts in quiz_groups.items() %}
+        <details class="drawer-quiz">
+          <summary>📘 {{ quiz_title }}</summary>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Score (%)</th>
+                  <th>Started</th>
+                  <th>Ended</th>
+                  <th>Duration</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for attempt in student_attempts %}
+                <tr>
+                  <td>{{ attempt[5] }}</td>
+                  <td>
+                    <span class="badge {% if attempt[2] > 70 %}badge-success{% elif attempt[2] > 40 %}badge-warning{% else %}badge-danger{% endif %}">
+                      {{ "%.2f"|format(attempt[2]) }}
+                    </span>
+                  </td>
+                  <td>{{ attempt[3] }}</td>
+                  <td>{{ attempt[4] or "In progress" }}</td>
+                  <td>
+                    {% if attempt[4] %}
+                      {{ (attempt[4] - attempt[3]).total_seconds() // 60 }} mins
+                    {% else %}--{% endif %}
+                  </td>
+                  <td><a href="{{ url_for('view_responses', attemptid=attempt[0]) }}" class="btn-view">View</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="6"><div class="empty-state">No attempts found for this quiz.</div></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </details>
+        {% else %}
+          <div class="empty-state"><p>No quizzes with attempts.</p></div>
+        {% endfor %}
+      {% else %}
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Quiz Title</th>
+                <th>Score (%)</th>
+                <th>Started</th>
+                <th>Ended</th>
+                <th>Duration</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for attempt in attempts %}
+              <tr>
+                <td>{{ attempt[1] }}</td>
+                <td>
+                  <span class="badge {% if attempt[2] > 70 %}badge-success{% elif attempt[2] > 40 %}badge-warning{% else %}badge-danger{% endif %}">
+                      {{ "%.2f"|format(attempt[2]) }}</span>
+                </td>
+                <td>{{ attempt[3] }}</td>
+                <td>{{ attempt[4] or "In progress" }}</td>
+                <td>
+                  {% if attempt[4] %}
+                    {{ (attempt[4] - attempt[3]).total_seconds() // 60 }} mins
+                  {% else %}--{% endif %}
+                </td>
+                <td><a href="{{ url_for('view_responses', attemptid=attempt[0]) }}" class="btn-view">View</a></td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6"><div class="empty-state">No quiz attempts found.</div></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+      <a href="{% if role == 'teacher' %}{{ url_for('teacher_dashboard') }}{% else %}{{ url_for('student_dashboard') }}{% endif %}" class="back-btn">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+

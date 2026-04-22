@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Leaderboard - {{ class_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .leaderboard-table {
+            width: 90%;
+            background: var(--card, #fff);
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px -10px rgba(98,54,255,0.09);
+            margin: 2rem auto;
+            overflow: hidden;
+            font-family: Inter, system-ui, sans-serif;
+            border-collapse: collapse;
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+        .leaderboard-table th {
+            background: linear-gradient(135deg, #6236FF 60%, #FF8C42 100%);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .leaderboard-table tr:nth-child(even) {
+            background: #f4f7fa;
+        }
+        .leaderboard-table tr:nth-child(odd) {
+            background: #fff;
+        }
+        .leaderboard-table td {
+            color: #1F2937;
+            font-size: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .rank-badge {
+            font-weight: 700;
+            padding: 0.5em 1em;
+            border-radius: 1em;
+            background: linear-gradient(135deg, #20C997, #FF8C42);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .dashboard-title {
+            font-size: 2rem;
+            color: #6236FF;
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 800;
+        }
+        .back-btn {
+            display: block;
+            margin: 1.5rem auto 1rem auto;
+            background: none;
+            border: 2px solid #6236FF;
+            color: #6236FF;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.12s, color 0.12s;
+        }
+        .back-btn:hover {
+            background: #6236FF;
+            color: #fff;
+            position: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="dashboard-title">Leaderboard for {{ class_name }}</h1>
+        <a href="{{ dashboard_url }}" class="back-btn">&larr; Back to Dashboard</a>
+        <table class="leaderboard-table animate-fade-in">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Student Name</th>
+                    <th>Best Score</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for name, score, rank in leaderboard %}
+    <tr>
+        <td><span class="rank-badge">{{ rank }}</span></td>
+        <td>{{ name }}</td>
+        <td>{{ '%.2f' % score }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3">No leaderboard data yet.</td></tr>
+    {% endfor %}
+</tbody>
+
+        </table>
+    </div>
+</body>
+</html>
+

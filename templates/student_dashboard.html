@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - QuizMaster</title>
+    <meta name="description" content="Take quizzes and track your progress">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar animate-slide-down">
+        <div class="container nav-content">
+            <a href="index.html" class="brand">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span class="brand-name">QuizMaster</span>
+            </a>
+            <div class="nav-links" style="position: relative;">
+    <span class="user-role">Student</span>
+    <a href="#" id="profile-btn" style="padding: 8px; border-radius: 50%;">
+        <!-- Person Icon SVG -->
+        <svg height="28" width="28" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path fill-rule="evenodd" d="M8 9a5 5 0 0 0-5 5v.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14a5 5 0 0 0-5-5z"/>
+        </svg>
+    </a>
+    <div id="profile-dropdown" style="display:none; position:absolute; right:0; top:40px; background:#fff; border:1px solid #eee; border-radius:8px; min-width:400px; box-shadow:0 4px 20px rgba(0,0,0,0.09); z-index:10; padding:18px 20px;">
+        <div style="font-weight:600; margin-bottom:3px;">{{ name }}</div>
+        <div style="color:#666; font-size:0.97em; word-break:break-all;">{{ email }}</div>
+        <hr>
+        <a href="{{ url_for('logout') }}" class="btn btn-ghost" style="width:100%; text-align:left;">Logout</a>
+    </div>
+</div>
+
+        </div>
+    </nav>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="dashboard-header animate-fade-in">
+                <div>
+                    <h1 class="dashboard-title">Student Dashboard</h1>
+                    <p class="dashboard-subtitle">View and attempt your quizzes</p>
+                </div>
+            </div>
+
+            <div class="stats-grid animate-fade-in">
+                <div class="stat-card">
+                    <div class="stat-icon gradient-primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="stat-label">Completed Quizzes</p>
+                        <p class="stat-value">{{ completed_quizzes }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon gradient-accent">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="stat-label">Average Score</p>
+                        <p class="stat-value">{{ "%.2f"|format(avg_score) }}%</p>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon gradient-success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="stat-label">Pending Quizzes</p>
+                        <p class="stat-value">{{ pending_quizzes }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon gradient-primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="stat-label">Best Score</p>
+                        <p class="stat-value">{{ best_score }}%</p>
+                    </div>
+                </div>
+            </div>
+<h2>My Classes</h2>
+<div class="enrolled-classes">
+    <div class="class-grid">
+        {% for class_name, subject in enrolled_classes %}
+            <div class="class-card">
+                <h3>{{ class_name }}</h3>
+                <p>{{ subject if subject else 'No subject specified' }}</p>
+                <a href="{{ url_for('leaderboard', class_name=class_name) }}" class="btn btn-accent">
+                    📊 View Leaderboard
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+        <!-- Request Enrollment, NO extra classes! -->
+<h2>Class Registration</h2>
+<div class="registration-classes">
+    <div class="class-grid">
+        <!-- Request Enrollment Card -->
+        <div class="class-card">
+            <div class="stat-icon gradient-accent" style="margin-bottom: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M16 19v-2a4 4 0 0 0-8 0v2"/>
+                    <line x1="20" y1="8" x2="20" y2="16"/>
+                    <line x1="23" y1="13" x2="17" y2="13"/>
+                </svg>
+            </div>
+            <p class="stat-label">Request Enrollment</p>
+            <form method="POST" action="{{ url_for('student_dashboard') }}" style="width: 100%;">
+                <select name="class_to_enroll" class="select-large" required>
+                    {% for cls, subject, teacher_name in available_classes %}
+                        {% if cls not in student_classes and cls not in pending_enrollment_classes %}
+                            <option value="{{ cls }}">{{ cls }}{% if subject %} - {{ subject }}{% endif %} (Teacher: {{ teacher_name }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-accent" style="width: 100%;">Request Enrollment</button>
+            </form>
+        </div>
+        <!-- Pending Requests Card -->
+        <div class="class-card">
+            <div class="stat-icon gradient-warning" style="margin-bottom: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 8 12 12 15 15"/>
+                </svg>
+            </div>
+            <p class="stat-label">Pending Requests</p>
+            {% for cls in pending_enrollment_classes %}
+                <div class="badge badge-warning">{{ cls }}</div>
+            {% else %}
+                <p>No pending requests.</p>
+            {% endfor %}
+        </div>
+        <!-- Rejected Requests Card -->
+        <div class="class-card">
+            <div class="stat-icon gradient-danger" style="margin-bottom: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+            </div>
+            <p class="stat-label">Rejected Requests</p>
+            {% for cls in rejected_enrollment_classes %}
+                <div class="badge badge-danger">{{ cls }}</div>
+                <form method="POST" action="{{ url_for('student_dashboard') }}">
+                    <input type="hidden" name="class_to_enroll" value="{{ cls }}">
+                    <button type="submit" class="btn btn-accent btn-small">Re-Apply</button>
+                </form>
+            {% else %}
+                <p>No rejected requests.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+      
+        </div>
+    </div>
+</div>
+
+
+            <div class="quiz-sections">
+                <div class="quiz-section animate-fade-in">
+                    <h2 class="section-title">Upcoming Quizzes</h2>
+                    <div class="quiz-cards" id="upcomingQuizzes" style="display: flex; flex-direction: column; align-items: center;">
+    {% for quiz in upcoming_quizzes %}
+        <div class="quiz-card" style="max-width: 1200px; width: 100%;">
+            <p>{{ quiz[1] }} (Available: {{ quiz[2] }} to {{ quiz[3] }})</p>
+            <a href="{{ url_for('attempt_quiz', quiz_id=quiz[0]) }}" class="btn btn-success">Attempt Quiz</a>
+        </div>
+    {% else %}
+        <p>No upcoming quizzes!</p>
+    {% endfor %}
+</div>
+
+                </div>
+
+<div class="quiz-section animate-fade-in">
+  <h2 class="section-title">Recent Results</h2>
+  <div class="quiz-list">
+    {% for result in recent_results %}
+      <div class="quiz-card" style="width: 1150px; margin: 0 auto;">
+        <strong>{{ result[0] }}</strong><br>
+        Score: {{ result[1] }}%
+        {% if result[2] not in feedback_attempt_ids %}
+          <a href="{{ url_for('feedback', attempt_id=result[2]) }}" class="btn btn-primary" style="margin-top: 8px;">Give Feedback</a>
+        {% else %}
+          <span style="margin-top: 8px; color: green;">Feedback Given</span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="quiz-card" style="width: 1150px; margin: 0 auto;">
+        No recent results!
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+<div class="quiz-section animate-fade-in">
+  <h2 class="section-title">Responses</h2>
+  <div class="quiz-list">
+    <a href="{{ url_for('list_responses') }}" style="text-decoration: none; color: inherit;">
+      <div class="quiz-card" 
+           style="width: 1150px; margin: 0 auto; display: flex; justify-content: center; align-items: center; height: 100px; font-size: 22px; font-weight: bold; color: #333; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background-color: #fff;">
+        View My Quiz Attempts
+      </div>
+    </a>
+  </div>
+</div>
+
+
+                
+                
+            </div>
+        </div>
+    </main>
+
+    <!--<script src="script.js"></script> -->
+    <script>
+const btn = document.getElementById('profile-btn');
+const drop = document.getElementById('profile-dropdown');
+btn.onclick = function(e) {
+    e.preventDefault();
+    drop.style.display = (drop.style.display === 'block') ? 'none' : 'block';
+};
+window.onclick = function(e){
+    if (!btn.contains(e.target) && !drop.contains(e.target)) drop.style.display = "none";
+};
+</script>
+
+</body>
+</html>

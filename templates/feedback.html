@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Feedback</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .container {
+      background: #ffffffcc;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+      border-radius: 1.8rem;
+      padding: 2.5rem 3rem;
+      width: 95%;
+      max-width: 700px;
+      text-align: center;
+      animation: slideUp 0.8s ease forwards;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #4338ca;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    form {
+      text-align: left;
+      margin-top: 1.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #1e1e1e;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      color: #1f2937;
+      margin-top: 0.5rem;
+      margin-bottom: 1.2rem;
+      resize: vertical;
+      background: #f9fafb;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      outline: none;
+      background: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      border-radius: 1.4rem;
+      padding: 0.8rem 2.5rem;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Submit Feedback for Your Quiz Attempt</h1>
+    <form method="POST" action="{{ url_for('submit_feedback', attempt_id=attempt_id) }}">
+      <div>
+        <label for="feedback">Your Feedback (required):</label><br>
+        <textarea id="feedback" name="feedback" rows="5" required></textarea>
+      </div>
+      <div>
+        <label for="comments">Additional Comments (optional):</label><br>
+        <textarea id="comments" name="comments" rows="3"></textarea>
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Submit Feedback</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+
