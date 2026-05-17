@@ -27,16 +27,10 @@ def main():
 
     database_url = os.environ.get("DATABASE_URL")
 
-    if not database_url:
-        print("DATABASE_URL not found")
-        sys.exit(1)
-
     conn = psycopg2.connect(
         database_url,
         sslmode="require"
     )
-
-    conn = psycopg2.connect(host=host, database=db, user=user, password=password)
     cur = conn.cursor()
 
     # Naive split by semicolon. Works for simple SQL seed files.
