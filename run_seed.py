@@ -25,10 +25,16 @@ def main():
 
     sql_text = seed_path.read_text(encoding='utf-8')
 
-    host = os.environ.get('PG_HOST', 'localhost')
-    db = os.environ.get('PG_DB', 'quizdb')
-    user = os.environ.get('PG_USER', 'postgres')
-    password = os.environ.get('PG_PASS', '4321')
+    database_url = os.environ.get("DATABASE_URL")
+
+    if not database_url:
+        print("DATABASE_URL not found")
+        sys.exit(1)
+
+    conn = psycopg2.connect(
+        database_url,
+        sslmode="require"
+    )
 
     conn = psycopg2.connect(host=host, database=db, user=user, password=password)
     cur = conn.cursor()
