@@ -4,7 +4,7 @@ import openpyxl
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 from collections import defaultdict
-
+import os
 import psycopg2
 
 
@@ -17,12 +17,17 @@ STUDENT_DOMAIN = "@student.annauniv.edu"
 TEACHER_DOMAIN = "@faculty.annauniv.edu"
 
 def get_db_connection():
-    return psycopg2.connect(
-        host="localhost",
-        database="quizdb",
-        user="postgres",
-        password="GANGSTER_GANESH"
-    )
+    # Use DATABASE_URL if available (for Railway/Render), else use local credentials
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        return psycopg2.connect(database_url)
+    else:
+        return psycopg2.connect(
+            host="localhost",
+            database="quizdb",
+            user="postgres",
+            password="4321"
+        )
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/')
@@ -1529,4 +1534,6 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(host='0.0.0.0', port=port, debug=debug)
