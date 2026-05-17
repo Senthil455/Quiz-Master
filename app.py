@@ -17,10 +17,13 @@ STUDENT_DOMAIN = "@student.annauniv.edu"
 TEACHER_DOMAIN = "@faculty.annauniv.edu"
 
 def get_db_connection():
-    # Use DATABASE_URL if available (for Railway/Render), else use local credentials
     database_url = os.environ.get('DATABASE_URL')
+
     if database_url:
-        return psycopg2.connect(database_url)
+        return psycopg2.connect(
+            database_url,
+            sslmode='require'
+        )
     else:
         return psycopg2.connect(
             host="localhost",
