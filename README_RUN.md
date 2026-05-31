@@ -1,11 +1,11 @@
-Quick run instructions for QuizMaster
+Quick run instructions for EduTrack
 
 1) Activate (or create) the virtual environment
 
 PowerShell (recommended if using the included .venv):
 
 ```powershell
-cd C:\Users\senth\Downloads\Projects\QuizMaster\PythonProject
+cd C:\Users\senth\Downloads\Projects\EduTrack\PythonProject
 .\.venv\Scripts\Activate.ps1
 ```
 
@@ -27,7 +27,7 @@ pip install -r requirements.txt
 If you have `psql` available (replace path if necessary):
 
 ```powershell
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d quizdb -f "C:\Users\senth\Downloads\Projects\QuizMaster\PythonProject\seed_data.sql"
+& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U postgres -d quizdb -f "C:\Users\senth\Downloads\Projects\EduTrack\PythonProject\seed_data.sql"
 ```
 
 Or use the included Python runner (uses connection env vars or defaults):

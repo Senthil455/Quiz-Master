@@ -1,4 +1,4 @@
--- QuizMaster Database Schema
+-- EduTrack Database Schema
 -- Run this before running seed_data.sql
 
 -- Users table

@@ -1,4 +1,4 @@
--- Seed data for QuizMaster
+-- Seed data for EduTrack
 -- Run with psql or via a Python script if psql isn't available.
 
 -- USERS

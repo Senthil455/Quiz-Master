@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Login - QuizMaster</title>
+    <title>Login - EduTrack</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -17,7 +17,7 @@
                         <path d="M6 12v5c3 3 9 3 12 0v-5"/>
                     </svg>
                 </div>
-                <span class="brand-name">QuizMaster</span>
+                <span class="brand-name">EduTrack</span>
             </a>
             <div class="nav-links">
                 <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
@@ -27,7 +27,7 @@
 
     <main>
         <div class="form-wrapper">
-            <h1>Log In to QuizMaster</h1>
+            <h1>Log In to EduTrack</h1>
             <form method="POST" class="form-card">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}

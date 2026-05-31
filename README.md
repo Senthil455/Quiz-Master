@@ -1,4 +1,4 @@
-# 🎓 Quiz Master
+# 🎓 EduTrack
 
 A role‑based web platform for quiz creation, participation, and performance tracking, designed for **students, teachers, and admins** in academic or training environments.
 
@@ -6,7 +6,7 @@ A role‑based web platform for quiz creation, participation, and performance tr
 
 ## 🧠 Overview
 
-**Quiz Master** is a full‑stack web application built with **HTML, CSS, JavaScript, Python (Flask), and PostgreSQL**. It enables:
+**EduTrack** is a full‑stack web application built with **HTML, CSS, JavaScript, Python (Flask), and PostgreSQL**. It enables:
 
 - Secure user authentication and role‑based access.  
 - Teachers to create, manage, and schedule quizzes.  
@@ -84,7 +84,7 @@ This project serves as a clean, portfolio‑grade example of a **data‑driven e
 ## 📂 Project Structure
 
 ```text
-Quiz-Master/
+EduTrack/
 ├── static/              # CSS, JS, and static assets
 │   ├── css/             # Stylesheets
 │   └── js/              # Client‑side scripts
@@ -100,7 +100,7 @@ Quiz-Master/
 ```
 
 Developed and maintained by **Senthil Raja R** — Full Stack Developer | AI Automation Enthusiast.  
-🔗 GitHub: [https://github.com/Senthil455/Quiz-Master](https://github.com/Senthil455/Quiz-Master)  
+🔗 GitHub: [https://github.com/Senthil455/EduTrack](https://github.com/Senthil455/EduTrack)  
 🔗 Profile: [https://github.com/Senthil455](https://github.com/Senthil455)
 
 ---
@@ -116,8 +116,8 @@ Developed and maintained by **Senthil Raja R** — Full Stack Developer | AI Aut
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Senthil455/Quiz-Master.git
-cd Quiz-Master
+git clone https://github.com/Senthil455/EduTrack.git
+cd EduTrack
 ```
 
 ### 2. Install dependencies
